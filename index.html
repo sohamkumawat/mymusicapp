@@ -6,6 +6,8 @@
     <title>MyMusic — Personal Web Library</title>
     <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="app.css" />
+    <button id="themeToggle">🌙</button>
+    <button onclick="openLibrary()">Library</button>
   </head>
   <body>
     <header>
@@ -24,6 +26,7 @@
       <section id="resultsSection">
         <h2>Results</h2>
         <ul id="results"></ul>
+        <button class="saveBtn">➕ Save</button>
       </section>
 
       <section id="playerSection">
@@ -53,5 +56,13 @@
 
     <script src="app.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
+
+    <div id="miniPlayer" class="mini-player hidden">
+      <img id="miniThumb" class="mini-thumb" />
+      <div class="mini-info">
+        <div id="miniTitle">Playing…</div>
+      </div>
+      <button id="miniClose" class="mini-btn">✖</button>
+    </div>
   </body>
 </html>

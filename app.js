@@ -142,3 +142,114 @@ if ("serviceWorker" in navigator) {
     .register("/service-worker.js")
     .catch((e) => console.warn(e));
 }
+
+const toggleBtn = document.getElementById("themeToggle");
+
+// Load saved theme
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark");
+  toggleBtn.textContent = "☀️";
+}
+
+toggleBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+
+  if (document.body.classList.contains("dark")) {
+    localStorage.setItem("theme", "dark");
+    toggleBtn.textContent = "☀️";
+  } else {
+    localStorage.setItem("theme", "light");
+    toggleBtn.textContent = "🌙";
+  }
+});
+
+function playVideo(videoId, title, thumbnailUrl) {
+  player.loadVideoById(videoId);
+
+  // Update mini player
+  document.getElementById("miniThumb").src = thumbnailUrl;
+  document.getElementById("miniTitle").textContent = title;
+
+  const mini = document.getElementById("miniPlayer");
+  mini.classList.remove("hidden");
+  mini.classList.add("show");
+}
+
+document.getElementById("miniClose").addEventListener("click", () => {
+  const mini = document.getElementById("miniPlayer");
+  mini.classList.remove("show");
+  setTimeout(() => mini.classList.add("hidden"), 300);
+
+  player.stopVideo(); // stops audio completely
+});
+
+document.getElementById("miniPlayer").addEventListener("click", () => {
+  // Smooth scroll to player area
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+async function renderSearchResult(video) {
+  const videoId = video.id.videoId;
+  const title = video.snippet.title;
+  const thumb = video.snippet.thumbnails.default.url;
+
+  const item = document.createElement("div");
+  item.classList.add("searchItem");
+
+  let saved = await isSaved(videoId);
+
+  item.innerHTML = `
+    <img src="${thumb}" class="thumb" />
+    <div class="title">${title}</div>
+    <button class="saveBtn ${saved ? "saved" : ""}">♡</button>
+  `;
+
+  const saveBtn = item.querySelector(".saveBtn");
+
+  saveBtn.addEventListener("click", async (e) => {
+    e.stopPropagation();
+
+    if (await isSaved(videoId)) {
+      await removeSong(videoId);
+      saveBtn.classList.remove("saved");
+    } else {
+      await saveSong({ videoId, title, thumb });
+      saveBtn.classList.add("saved");
+    }
+  });
+
+  document.getElementById("results").appendChild(item);
+}
+
+async function openLibrary() {
+  const songs = await getAllSongs();
+  renderLibrary(songs);
+}
+
+function renderLibrary(songs) {
+  const container = document.getElementById("results");
+  container.innerHTML = "";
+
+  songs.forEach((song) => {
+    const item = document.createElement("div");
+    item.classList.add("searchItem");
+
+    item.innerHTML = `
+      <img src="${song.thumb}" class="thumb" />
+      <div class="title">${song.title}</div>
+      <button class="saveBtn saved">♡</button>
+    `;
+
+    item.addEventListener("click", () => {
+      playVideo(song.videoId, song.title, song.thumb);
+    });
+
+    item.querySelector(".saveBtn").addEventListener("click", async (e) => {
+      e.stopPropagation();
+      await removeSong(song.videoId);
+      openLibrary();
+    });
+
+    container.appendChild(item);
+  });
+}

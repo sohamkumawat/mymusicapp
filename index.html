@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MyMusic — Personal Web Library</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <header>
+      <h1>MyMusic</h1>
+      <div class="search">
+        <input id="q" placeholder="Search YouTube (artist, song)" />
+        <button id="searchBtn">Search</button>
+      </div>
+      <div class="controls">
+        <button id="openLibraryBtn">Library</button>
+        <button id="installBtn" style="display: none">Install</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="resultsSection">
+        <h2>Results</h2>
+        <ul id="results"></ul>
+      </section>
+
+      <section id="playerSection">
+        <div id="player"></div>
+        <div id="playerInfo"></div>
+      </section>
+
+      <section id="librarySection" style="display: none">
+        <h2>Your Library</h2>
+        <ul id="library"></ul>
+        <button id="clearLibrary">Clear Library</button>
+      </section>
+    </main>
+
+    <template id="videoItemTemplate">
+      <li class="video-item">
+        <img class="thumb" />
+        <div class="meta">
+          <div class="title"></div>
+          <div class="actions">
+            <button class="play">Play</button>
+            <button class="save">Save</button>
+          </div>
+        </div>
+      </li>
+    </template>
+
+    <script src="app.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+  </body>
+</html>

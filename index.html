@@ -1,68 +1,109 @@
+<!-- FILE: index.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>MyMusic — Personal Web Library</title>
+    <title>MyMusic — Personal Library</title>
+
     <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="app.css" />
-    <button id="themeToggle">🌙</button>
-    <button onclick="openLibrary()">Library</button>
+    <meta name="theme-color" content="#1db954" />
+
+    <!-- Favicon (optional) -->
+    <link rel="icon" href="/favicon.ico" />
   </head>
   <body>
-    <header>
-      <h1>MyMusic</h1>
+    <header class="topbar">
+      <div class="brand">MyMusic</div>
       <div class="search">
         <input id="q" placeholder="Search YouTube (artist, song)" />
         <button id="searchBtn">Search</button>
       </div>
-      <div class="controls">
+
+      <div class="header-right">
+        <button id="themeToggle" title="Toggle theme">🌙</button>
         <button id="openLibraryBtn">Library</button>
+        <button id="loginBtn">Login</button>
+        <button id="logoutBtn" style="display: none">Logout</button>
         <button id="installBtn" style="display: none">Install</button>
       </div>
     </header>
 
-    <main>
-      <section id="resultsSection">
+    <main class="main">
+      <section id="resultsSection" class="card">
         <h2>Results</h2>
-        <ul id="results"></ul>
-        <button class="saveBtn">➕ Save</button>
+        <ul id="results" class="list"></ul>
       </section>
 
-      <section id="playerSection">
-        <div id="player"></div>
-        <div id="playerInfo"></div>
-      </section>
+      <aside class="rightcol">
+        <section id="playerSection" class="card">
+          <h3>Player</h3>
+          <div id="player" class="player"></div>
+          <div id="playerInfo" class="playerInfo">Nothing playing</div>
+          <div class="playerControls">
+            <button id="prevBtn">⏮</button>
+            <button id="playPauseBtn">⏯</button>
+            <button id="nextBtn">⏭</button>
+            <button id="queueBtn">☰ Queue</button>
+          </div>
+        </section>
 
-      <section id="librarySection" style="display: none">
-        <h2>Your Library</h2>
-        <ul id="library"></ul>
-        <button id="clearLibrary">Clear Library</button>
-      </section>
+        <section id="librarySection" class="card" style="display: none">
+          <h3>Your Library</h3>
+          <ul id="library" class="list"></ul>
+          <div style="margin-top: 8px">
+            <button id="clearLibrary">Clear Library</button>
+          </div>
+        </section>
+      </aside>
     </main>
 
+    <!-- Mini player -->
+    <div id="miniPlayer" class="mini-player hidden" aria-hidden="true">
+      <img id="miniThumb" class="mini-thumb" src="" alt="thumb" />
+      <div class="mini-info">
+        <div id="miniTitle">Playing…</div>
+      </div>
+      <button id="miniPrev" class="mini-btn">⏮</button>
+      <button id="miniPlay" class="mini-btn">⏯</button>
+      <button id="miniNext" class="mini-btn">⏭</button>
+      <button id="miniQueue" class="mini-btn">☰</button>
+      <button id="miniClose" class="mini-btn">✖</button>
+    </div>
+
+    <!-- Queue panel -->
+    <div id="queuePanel" class="queue-panel hidden" aria-hidden="true">
+      <h3>Queue</h3>
+      <div id="queueList"></div>
+    </div>
+
+    <!-- Template for result item -->
     <template id="videoItemTemplate">
       <li class="video-item">
         <img class="thumb" />
         <div class="meta">
           <div class="title"></div>
+          <div class="sub"></div>
           <div class="actions">
             <button class="play">Play</button>
+            <button class="next">Play Next</button>
             <button class="save">Save</button>
           </div>
         </div>
       </li>
     </template>
 
-    <script src="app.js"></script>
+    <!-- Firebase SDKs (required) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+
+    <!-- YouTube iframe API -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
-    <div id="miniPlayer" class="mini-player hidden">
-      <img id="miniThumb" class="mini-thumb" />
-      <div class="mini-info">
-        <div id="miniTitle">Playing…</div>
-      </div>
-      <button id="miniClose" class="mini-btn">✖</button>
-    </div>
+    <!-- App files -->
+    <script src="firebase.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>
